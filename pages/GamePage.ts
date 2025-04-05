@@ -102,7 +102,7 @@ export class GamePage extends BasePage {
 
   async closeGameInfo() {
     await this.closeIconLocator.locator("path").click();
-    await this.page.waitForTimeout(2000);
+
   }
 
   async openGameRules() {
