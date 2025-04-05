@@ -26,4 +26,77 @@ test.describe('Game Translation Coverage Test', () => {
     await page.close();
   });
 
+  test('Validate game translation coverage', async () => {
+    // 1. Launch the game
+    await test.step('Launch the game', async () => {
+      await gamePage.takeScreenshot('screenshots/1-launch-game.png');
+      await gamePage.waitForCanvas();
+      await gamePage.takeScreenshot('screenshots/1-launch-game.png');
+    
+      //start game 
+      await gamePage.startGame();
+      await gamePage.takeScreenshot('screenshots/1-start-game.png');
+  
+    });
+
+
+    // 2. Open the Settings Menu.
+    await test.step('Open the Settings Menu', async () => {
+      await gamePage.openSettingsMenu();
+      await gamePage.takeScreenshot('screenshots/2-open-settings-menu.png');
+    });
+
+
+    // 3. Open "Game Info".
+    await test.step('Open Game Info', async () => {
+      await gamePage.openGameInfo();
+      await gamePage.takeScreenshot('screenshots/3-open-game-info.png');
+    });
+
+
+    // 4. Scroll to the bottom of the page.
+    await test.step('Scroll to the bottom of Game Info', async () => {
+      await gamePage.scrollToBottomOfGameInfo();
+      await gamePage.takeScreenshot('screenshots/4-scroll-bottom-game-info.png');
+    });
+
+
+    // 5. Close "Game Info".
+    await test.step('Close Game Info', async () => {
+      await gamePage.closeGameInfo();
+      await gamePage.takeScreenshot('screenshots/5-close-game-info.png');
+      
+    });
+
+
+    // 6. Open "Game Rules".
+    await test.step('Open Game Rules', async () => {
+      await gamePage.waitForCanvas();
+      await gamePage.openGameRules();
+      await gamePage.waitForAction();
+      await gamePage.takeScreenshot('screenshots/6-open-game-rules.png');
+
+    });
+
+
+    // 7. Scroll to the bottom of the page.
+    await test.step('Scroll to the bottom of Game Rules', async () => {
+      await gamePage.scrollToBottomOfGameRules();
+      await gamePage.takeScreenshot('screenshots/7-scroll-bottom-game-rules.png');
+    });
+
+
+    // 8. Close "Game Rules".
+    await test.step('Close Game Rules', async () => {
+      await gamePage.closeGameRules();
+      await gamePage.takeScreenshot('screenshots/8-close-game-rules.png');
+    });
+
+
+    // 9. Close the Settings Menu.
+    await test.step('Close the Settings Menu', async () => {
+      await gamePage.closeSettingsMenu();
+      await gamePage.takeScreenshot('screenshots/9-close-settings-menu.png');
+    });
+  });
 });

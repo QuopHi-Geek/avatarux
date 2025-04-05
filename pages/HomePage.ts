@@ -13,9 +13,9 @@ export class HomePage extends BasePage {
   constructor(page: Page) {
     super(page);
     this.page = page;
-    this.gamesLocator = page.locator('#menu-item-283').getByRole('link', { name: 'Games' });
+    this.gamesLocator = page.locator('//li[@id="menu-item-283"]');
     this.selectGameLocator = page.locator('#main').getByRole('link').filter({ hasText: /^$/ })
-    this.playDemoLocator = page.getByRole('button', { name: 'Play demo Try demo' });
+    this.playDemoLocator = page.locator("//button[@class='crunch-button crunch-button__full-background crunch-button__full-background--with-icon crunch-button__full-background--with-icon--left crunch-button__full-background--medium js-iframe-modal-trigger c-mr-6']");
     this.iframeLocator = page.locator('iframe[title="Iframe Content"]');
     this.iframe = page.frameLocator('iframe[title="Iframe Content"]');
   }

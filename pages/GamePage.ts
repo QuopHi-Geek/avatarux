@@ -5,88 +5,82 @@ export class GamePage extends BasePage {
   readonly frame: FrameLocator;
   readonly page: Page;
   readonly canvasLocator: Locator;
-  readonly settingsMenuLocator: Locator;
   readonly gameInfoLocator: Locator;
   readonly gameRulesLocator: Locator;
-  readonly closeSettingsMenuLocator: Locator;
-  readonly closeGameInfoLocator: Locator;
-  readonly closeGameRulesLocator: Locator;
+  readonly closeIconLocator: Locator;
   readonly scrollElementLocator: Locator;
   readonly startGameLocator: Locator;
   readonly iframeLocator: Locator;
   readonly iframe: FrameLocator;
   readonly rootDivLocator: Locator;
-  readonly rootCanvaLocator: Locator;
+  readonly rootCanvasLocator: Locator;
+  readonly gamesInfoFeatureLocator: Locator;
+  readonly gameRulesContentLocator: Locator;
+  readonly genericLocator: Locator;
+  readonly genericLocator2: Locator;
   
 
   constructor(page: Page, frame: FrameLocator) {
     super(page);
     this.frame = frame;
     this.page = page;
-    this.canvasLocator = frame.locator('canvas');
-    this.settingsMenuLocator = frame.getByRole('button', { name: 'Settings' });
-    this.gameInfoLocator = frame.getByText('GAME INFO');
-    this.gameRulesLocator = frame.getByText('GAME RULES', { exact: true });
-    this.closeSettingsMenuLocator = frame.getByRole('img');
-    this.closeGameInfoLocator = frame.getByRole('img');
-    this.closeGameRulesLocator = frame.getByRole('img');
+    this.canvasLocator = frame.locator("canvas");
+    this.gameInfoLocator = frame.locator('//span[@class="title-0-2-100 title-d3-0-2-104"]');
+    this.gameRulesLocator = frame.locator('//span[@class="title-0-2-100 title-d5-0-2-106"]');
+    this.closeIconLocator = frame.getByRole("img");
     this.scrollElementLocator = frame.locator('[id="__react_wrapper__"]');
-    this.iframeLocator = page.locator('iframe[title="Iframe Content"]'); // Use page.locator here
+    this.iframeLocator = page.locator('iframe[title="Iframe Content"]');
     this.iframe = frame;
     this.startGameLocator = frame.locator('//iframe[@id="js-modal-iframe"]');
-    this.rootDivLocator = this.iframe.locator('#root');
-    this.rootCanvaLocator = this.iframe.locator('canvas');
+    this.gamesInfoFeatureLocator = this.iframe.locator(
+      "div:nth-child(5) > .sectionContainer-0-2-9"
+    );
+    this.gameRulesContentLocator = this.frame.locator(
+      "#__react_wrapper__ > div:nth-child(2) > div.page-0-2-42.pageActive-0-2-43 > div.rulesContent-0-2-45.rulesContent-d4-0-2-52 > div > ul:nth-child(9) > li:nth-child(3)"
+    );
+    this.rootDivLocator = this.iframe.locator("#root");
+    this.rootCanvasLocator = this.iframe.locator("canvas");
   }
 
   async waitForCanvas() {
-    await this.canvasLocator.waitFor({ state: 'visible' });
+    await this.canvasLocator.waitFor({ state: "visible" });
   }
 
-
-  async startGame(){
-    await this.rootCanvaLocator.click();
+  async startGame() {
+    await this.rootCanvasLocator.click();
     await this.page.waitForTimeout(2000);
+
+    //waits and executes click on canvas
     await this.forceClickCanvas();
     await this.page.waitForTimeout(2000);
-    await this.rootCanvaLocator.click({
-        position: {
-          x: 38,
-          y: 454
-        }
-      }); // clicks sound
-
-      await this.page.waitForTimeout(2000);
-      await this.forceClickCanvas();
+    await this.forceClickCanvas();
   }
-
 
   async forceClickCanvas() {
     const canvasBoundingBox = await this.canvasLocator.boundingBox();
     if (!canvasBoundingBox) {
-      throw new Error('Canvas bounding box not found.');
+      throw new Error("Canvas not found or displayed");
     }
 
     await this.page.mouse.click(
       canvasBoundingBox.x + canvasBoundingBox.width / 2,
       canvasBoundingBox.y + canvasBoundingBox.height / 2,
-      { button: 'left', clickCount: 1 }
+      { button: "left", clickCount: 1 }
     );
   }
 
-
-
   async waitForIframe() {
-    await this.iframeLocator.waitFor({ state: 'visible' });
+    await this.iframeLocator.waitFor({ state: "visible" });
   }
 
   async openSettingsMenu() {
     await this.page.waitForTimeout(2000);
-    await this.rootCanvaLocator.click({
-        position: {
-          x: 39,
-          y: 514
-        }
-      }); // clicks settings
+    await this.rootCanvasLocator.click({
+      position: {
+        x: 39,
+        y: 514,
+      },
+    }); // clicks settings
     await this.page.waitForTimeout(2000);
   }
 
@@ -99,43 +93,57 @@ export class GamePage extends BasePage {
   async scrollToBottomOfGameInfo() {
     //adds scroll element
     await this.page.waitForTimeout(1000);
-    await this.scrollElementLocator.evaluate(el => el.scrollTop = el.scrollHeight);
+    await this.scrollElementLocator.evaluate((el) => (el.scrollTop = 1000));
+
+    await expect(this.gamesInfoFeatureLocator).toBeVisible();
+    await this.gamesInfoFeatureLocator.scrollIntoViewIfNeeded();
     await this.page.waitForTimeout(500);
   }
 
   async closeGameInfo() {
-    await this.closeGameInfoLocator.locator('path').click();
+    await this.closeIconLocator.locator("path").click();
     await this.page.waitForTimeout(2000);
   }
 
   async openGameRules() {
-    await expect(this.rootCanvaLocator).toBeVisible()
-    await this.rootCanvaLocator.click({
-        position: {
-          x: 39,
-          y: 514
-        }
-      }); // clicks settings
+    await expect(this.rootCanvasLocator).toBeVisible();
+    await this.rootCanvasLocator.click({
+      position: {
+        x: 39,
+        y: 514,
+      },
+    }); // clicks settings
     await expect(this.gameRulesLocator).toBeVisible();
     await this.gameRulesLocator.click();
   }
 
   async scrollToBottomOfGameRules() {
     //adds scroll element
-    await this.scrollElementLocator.evaluate(el => el.scrollTop = el.scrollHeight);
+    await this.gameRulesContentLocator.evaluate((el) => (el.scrollTop = 1000));
+    await this.page.waitForTimeout(500);
+
+    await expect(this.gameRulesContentLocator).toBeVisible();
+    await this.gameRulesContentLocator.scrollIntoViewIfNeeded();
     await this.page.waitForTimeout(500);
   }
 
   async closeGameRules() {
-    await this.closeGameInfoLocator.locator('path').click();
-    
+    await this.closeIconLocator.locator("path").click();
+    await this.page.waitForTimeout(500);
   }
 
   async closeSettingsMenu() {
-    await this.closeSettingsMenuLocator.locator('path').click();
+    await this.rootCanvasLocator.click({
+      position: {
+        x: 39,
+        y: 514,
+      },
+    });
+    await this.closeIconLocator.locator("path").click();
+    await this.page.waitForTimeout(500);
   }
 
-  async waitForAction(){
+  async waitForAction() {
     await this.page.waitForTimeout(2000);
   }
 }

@@ -9,8 +9,8 @@ export class BasePage {
   constructor(page: Page) {
     this.page = page;
     this.frame = page.frameLocator('iframe[title="Iframe Content"]');
-    this.acceptCookiesLocator = page.getByRole('button', { name: 'Accept All' });
-    this.acceptAgeLocator = page.getByRole('button', { name: 'I am over' });
+    this.acceptCookiesLocator = page.locator('//button[@class="cky-btn cky-btn-accept"]').first();
+    this.acceptAgeLocator = page.locator('//button[@id="ageOver"]');
   }
 
   async acceptCookies() {
