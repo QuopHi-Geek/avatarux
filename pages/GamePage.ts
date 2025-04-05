@@ -117,6 +117,7 @@ export class GamePage extends BasePage {
     }); // clicks settings
     await expect(this.gameRulesLocator).toBeVisible();
     await this.gameRulesLocator.click();
+    await this.page.waitForTimeout(500);
   }
 
   async scrollToBottomOfGameRules() {
@@ -142,6 +143,7 @@ export class GamePage extends BasePage {
       },
     });
     await this.closeIconLocator.locator("path").click();
+    await this.page.waitForTimeout(500);
   }
 
   async waitForAction() {
