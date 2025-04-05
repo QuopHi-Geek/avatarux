@@ -24,22 +24,23 @@ export class GamePage extends BasePage {
     super(page);
     this.frame = frame;
     this.page = page;
+    this.iframeLocator = page.locator('iframe[title="Iframe Content"]');
+    this.iframe = frame;
     this.canvasLocator = frame.locator("canvas");
+    this.startGameLocator = frame.locator('//iframe[@id="js-modal-iframe"]');
+    this.scrollElementLocator = frame.locator('[id="__react_wrapper__"]');
     this.gameInfoLocator = frame.locator('//span[@class="title-0-2-100 title-d3-0-2-104"]');
     this.gameRulesLocator = frame.locator('//span[@class="title-0-2-100 title-d5-0-2-106"]');
     this.closeIconLocator = frame.getByRole("img");
-    this.scrollElementLocator = frame.locator('[id="__react_wrapper__"]');
-    this.iframeLocator = page.locator('iframe[title="Iframe Content"]');
-    this.iframe = frame;
-    this.startGameLocator = frame.locator('//iframe[@id="js-modal-iframe"]');
     this.gamesInfoFeatureLocator = this.iframe.locator(
       "div:nth-child(5) > .sectionContainer-0-2-9"
     );
     this.gameRulesContentLocator = this.frame.locator(
       "#__react_wrapper__ > div:nth-child(2) > div.page-0-2-42.pageActive-0-2-43 > div.rulesContent-0-2-45.rulesContent-d4-0-2-52 > div > ul:nth-child(9) > li:nth-child(3)"
     );
-    this.rootDivLocator = this.iframe.locator("#root");
     this.rootCanvasLocator = this.iframe.locator("canvas");
+    this.rootDivLocator = this.iframe.locator("#root");
+    
   }
 
   async waitForCanvas() {
@@ -141,7 +142,6 @@ export class GamePage extends BasePage {
       },
     });
     await this.closeIconLocator.locator("path").click();
-    await this.page.waitForTimeout(500);
   }
 
   async waitForAction() {
