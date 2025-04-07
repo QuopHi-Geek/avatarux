@@ -82,7 +82,7 @@ export class GamePage extends BasePage {
         y: 514,
       },
     }); // clicks settings
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(500);
   }
 
   async openGameInfo() {
